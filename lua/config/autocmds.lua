@@ -1,3 +1,4 @@
+-- pick up where you last left off in the file
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -11,6 +12,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "gitcommit", "markdown" },
   callback = function()
+    vim.opt_local.wrap = true
     vim.opt_local.spell = true
   end,
 })

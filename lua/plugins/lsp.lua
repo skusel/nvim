@@ -13,7 +13,6 @@ return {
         ensure_installed = {
           "bashls",
           "clangd",
-          "gopls",
           "lua_ls",
           "pyright"
         }
@@ -61,7 +60,6 @@ return {
       local packages = {
         "bash-language-server",
         "clangd",
-        "gopls",
         "lua-language-server",
         "pyright",
       }
