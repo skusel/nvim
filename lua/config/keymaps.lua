@@ -13,6 +13,7 @@ local utils = require("utils")
 --   silent = execute command silently
 
 -- Better window navitation
+vim.keymap.set("n", "<C-c>", "<C-w>c", { noremap = true, desc = "Close window" })
 vim.keymap.set("n", "<C-h>", "<C-w>h", { noremap = true, desc = "Move left one window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { noremap = true, desc = "Move down one window" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { noremap = true, desc = "Move up one window" })
