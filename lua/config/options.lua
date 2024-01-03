@@ -23,3 +23,20 @@ vim.opt.splitright = true -- force all vertical splits to the right of current w
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.tabstop = 2 -- number of spaces a tab counts for
 vim.opt.shiftwidth = 2 -- number of spaces for an indent via ">>", "<<", or smartindent
+
+-- improve the look of diagnostics
+vim.diagnostic.config({
+  virtual_text = false,
+  float = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})

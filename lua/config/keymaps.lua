@@ -38,6 +38,9 @@ vim.keymap.set("n", "<leader>c", ":noh<CR>", { noremap = true })
 -- Paste without replacing clipboard
 vim.keymap.set("v", "p", '"_dP', { noremap = true })
 
+-- Show floating diagnostic text
+vim.keymap.set("n", "<leader>d", ":lua vim.diagnostic.open_float()<CR>", { noremap = true })
+
 -- Toggles
 vim.keymap.set("n", "<leader>tw", function()
   utils.toggle("wrap")

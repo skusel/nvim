@@ -40,7 +40,6 @@ local M = {
       "llvm",
       "lua",
       "make",
-      "mlir",
       "ninja",
       "objdump",
       "proto",
