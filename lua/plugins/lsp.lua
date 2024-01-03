@@ -41,6 +41,7 @@ return {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
     opts = {
+      PATH = "append", -- preference already installed packages
       pip = {
         upgrade_pip = true,
       },
