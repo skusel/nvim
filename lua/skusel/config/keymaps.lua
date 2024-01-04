@@ -1,4 +1,4 @@
-local utils = require("utils")
+local utils = require("skusel.utils")
 
 -- Modes
 --   normal_mode = "n",
@@ -39,8 +39,11 @@ vim.keymap.set("n", "<leader>c", ":noh<CR>", { noremap = true })
 -- Paste without replacing clipboard
 vim.keymap.set("v", "p", '"_dP', { noremap = true })
 
--- Show floating diagnostic text
-vim.keymap.set("n", "<leader>d", ":lua vim.diagnostic.open_float()<CR>", { noremap = true })
+-- Diagnostic shortcuts
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { noremap = true })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { noremap = true })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { noremap = true })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { noremap = true })
 
 -- Toggles
 vim.keymap.set("n", "<leader>tw", function()

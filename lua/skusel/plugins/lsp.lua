@@ -55,7 +55,6 @@ return {
     },
     config = function(_, opts)
       require("mason").setup(opts)
-      local utils = require("utils")
       local mr = require("mason-registry")
       local packages = {
         "bash-language-server",

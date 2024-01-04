@@ -9,6 +9,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
+-- check spelling and wrap text for gitcommit and markdown
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "gitcommit", "markdown" },
   callback = function()
@@ -17,6 +18,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- follow pep 8 spacing guidelines for python files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "python" },
   callback = function()
