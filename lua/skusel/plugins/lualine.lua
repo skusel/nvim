@@ -23,10 +23,6 @@ local M = {
       }
     }
   },
-  config = function(_, opts)
-    local lualine = require("lualine")
-    lualine.setup(opts)
-  end,
 }
 
 return M
