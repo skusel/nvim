@@ -18,6 +18,7 @@ local M = {
         }
       },
       lualine_x = {
+        "filesize",
         "encoding",
         "filetype"
       }
