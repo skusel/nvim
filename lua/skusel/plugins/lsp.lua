@@ -13,6 +13,7 @@ local M = {
         ensure_installed = {
           "bashls",
           "clangd",
+          "eslint",
           "lua_ls",
           "pyright"
         }
@@ -59,6 +60,7 @@ local M = {
       local packages = {
         "bash-language-server",
         "clangd",
+        "eslint-lsp",
         "lua-language-server",
         "pyright",
       }
