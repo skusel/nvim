@@ -63,6 +63,7 @@ local M = {
         "eslint-lsp",
         "lua-language-server",
         "pyright",
+        "shellcheck" -- needed for bashls to show diagnostics
       }
       local function ensure_installed()
         for _, package in ipairs(packages) do
