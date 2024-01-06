@@ -6,6 +6,7 @@ local M = {
       "williamboman/mason-lspconfig.nvim"
     },
     config = function(_, _)
+      local utils_lsp = require("skusel.utils.lsp")
       local lspconfig = require("lspconfig")
       local mason_lspconfig = require("mason-lspconfig")
 
@@ -21,10 +22,13 @@ local M = {
 
       mason_lspconfig.setup_handlers({
         function(server_name)
-          lspconfig[server_name].setup({})
+          lspconfig[server_name].setup({
+            on_attach = utils_lsp.on_attach()
+          })
         end,
         ["lua_ls"] = function()
           lspconfig.lua_ls.setup({
+            on_attach = utils_lsp.on_attach(),
             settings = {
               Lua = {
                 diagnostics = {

@@ -2,9 +2,6 @@ local M = {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
   event = "BufReadPost",
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter-refactor",
-  },
   opts = {
     highlight = {
       enable = true,
@@ -55,14 +52,6 @@ local M = {
     },
     sync_install = true,
     ignore_install = {}, -- List of parsers to ignore installation
-    refactor = {
-      highlight_definitions = {
-        enable = true,
-        -- Set to false if you have an `updatetime` of ~100.
-        clear_on_cursor_move = true,
-      },
-      highlight_current_scope = { enable = false },
-    },
   },
   config = function(_, opts)
     require("nvim-treesitter.configs").setup(opts)

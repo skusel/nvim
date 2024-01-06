@@ -23,20 +23,29 @@ vim.opt.splitright = true -- force all vertical splits to the right of current w
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.tabstop = 2 -- number of spaces a tab counts for
 vim.opt.shiftwidth = 2 -- number of spaces for an indent via ">>", "<<", or smartindent
+vim.opt.updatetime = 1000 -- reduce cursor hold time to show disagnostics quicker (defualt: 4000ms)
 
 -- improve the look of diagnostics
 vim.diagnostic.config({
   virtual_text = false,
   float = {
-    focusable = false,
-    style = "minimal",
+    focusable = false, -- don't allow window to be focused by mouse or keyboard
     border = "rounded",
     source = "always",
     header = "",
     prefix = "",
+    scope = "line" -- default: "line"
   },
   signs = true,
   underline = true,
   update_in_insert = true,
   severity_sort = true,
 })
+
+-- Add boarders to all LSP floating windows
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or "rounded"
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
