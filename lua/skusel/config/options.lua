@@ -25,7 +25,10 @@ vim.opt.tabstop = 2 -- number of spaces a tab counts for
 vim.opt.shiftwidth = 2 -- number of spaces for an indent via ">>", "<<", or smartindent
 vim.opt.updatetime = 1000 -- reduce cursor hold time to show disagnostics quicker (defualt: 4000ms)
 
--- improve the look of diagnostics
+-- Turn LSP logging off
+vim.lsp.set_log_level("off") -- change to "debug" to diagnose LSP issues
+
+-- Improve the look of diagnostics
 vim.diagnostic.config({
   virtual_text = false,
   float = {
