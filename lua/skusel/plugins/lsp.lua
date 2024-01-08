@@ -77,11 +77,7 @@ local M = {
           end
         end
       end
-      if mr.refresh then
-        mr.refresh(ensure_installed)
-      else
-        ensure_installed()
-      end
+      mr.refresh(ensure_installed)
     end,
   }
 }
