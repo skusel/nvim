@@ -26,6 +26,13 @@ local M = {
             on_attach = utils_lsp.on_attach()
           })
         end,
+        ["clangd"] = function()
+          lspconfig.clangd.setup({
+            on_attach = utils_lsp.on_attach(),
+            -- explicitly set filetypes to exclude "proto"
+            filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
+          })
+        end,
         ["lua_ls"] = function()
           lspconfig.lua_ls.setup({
             on_attach = utils_lsp.on_attach(),
