@@ -4,8 +4,8 @@ M.on_attach = function(_, _)
   local keymapopts = { noremap = true, silent = true }
 
 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, keymapopts)
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, keymapopts)
-	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, keymapopts)
+	vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>", keymapopts)
+	vim.keymap.set("n", "gi", ":Telescope lsp_implementations<CR>", keymapopts)
 	vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>", keymapopts)
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, keymapopts)
 	vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, keymapopts)
