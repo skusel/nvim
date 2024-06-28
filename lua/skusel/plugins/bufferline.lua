@@ -1,7 +1,7 @@
 local M = {
   "akinsho/bufferline.nvim",
   event = "VeryLazy",
-  tag = "v4.5.2",
+  tag = "v4.6.1",
   opts = {
     options = {
       mode = "buffers",
