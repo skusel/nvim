@@ -28,6 +28,11 @@ local M = {
         end,
         ["clangd"] = function()
           lspconfig.clangd.setup({
+            cmd = {
+              "clangd",
+              "--background-index",
+              "--clang-tidy"
+            },
             on_attach = utils_lsp.on_attach(),
             -- explicitly set filetypes to exclude "proto"
             filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
