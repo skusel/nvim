@@ -24,6 +24,10 @@ vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.tabstop = 2 -- number of spaces a tab counts for
 vim.opt.shiftwidth = 2 -- number of spaces for an indent via ">>", "<<", or smartindent
 vim.opt.updatetime = 1000 -- reduce cursor hold time to show disagnostics quicker (defualt: 4000ms)
+vim.opt.foldmethod = "expr" -- uses a custom expression (specified in foldexpr) to define folds
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- use Treesitter's syntax-aware folding
+vim.opt.foldenable = false -- start with folds open
+vim.opt.foldlevel = 99 -- prevents folds from being closed by default
 
 -- Turn LSP logging off
 vim.lsp.set_log_level("off") -- change to "debug" to diagnose LSP issues
