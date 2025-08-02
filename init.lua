@@ -378,7 +378,7 @@ local plugins = {
     enabled = utils.jdk_installed()
   },
   {
-    "neovim/nvim-lspconfig",
+    "neovim/nvim-lspconfig", -- provides base LSP configs
     lazy = false,
     prority = 997
   }
