@@ -143,6 +143,17 @@ function utils.go_installed()
   end
 end
 
+function utils.jdk_installed()
+  local handle = io.popen("javac -version 2>&1")
+  if handle ~= nil then
+    local result = handle:read("*a")
+    handle:close()
+    return result:find("javac version") ~= nil
+  else
+    return false
+  end
+end
+
 -- ----------------------------------------------------------------------------
 -- Plugins
 -- ----------------------------------------------------------------------------
@@ -346,6 +357,9 @@ local plugins = {
       if utils.go_installed() then
         table.insert(packages, "gopls")
       end
+      if utils.jdk_installed() then
+        table.insert(packages, "jdtls")
+      end
       local function ensure_installed()
         for _, package in ipairs(packages) do
           local p = mr.get_package(package)
@@ -356,6 +370,17 @@ local plugins = {
       end
       mr.refresh(ensure_installed)
     end,
+  },
+  {
+    "nvim-java/nvim-java",
+    lazy = false,
+    priority = 998,
+    enabled = utils.jdk_installed()
+  },
+  {
+    "neovim/nvim-lspconfig",
+    lazy = false,
+    prority = 997
   }
 }
 
@@ -475,6 +500,10 @@ if utils.go_installed() then
     on_attach = on_lsp_attach
   })
   vim.lsp.enable("gopls")
+end
+
+if utils.jdk_installed() then
+  vim.lsp.enable("jdtls")
 end
 
 vim.lsp.config("lua_ls", {
