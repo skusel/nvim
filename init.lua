@@ -148,7 +148,7 @@ function utils.jdk_installed()
   if handle ~= nil then
     local result = handle:read("*a")
     handle:close()
-    return result:find("javac version") ~= nil
+    return result:find("javac") ~= nil
   else
     return false
   end
@@ -325,14 +325,24 @@ local plugins = {
     end,
   },
   {
-    "williamboman/mason.nvim",
+    "nvim-java/nvim-java",
     lazy = false,
     priority = 999,
+    enabled = utils.jdk_installed()
+  },
+  {
+    "williamboman/mason.nvim",
+    lazy = false,
+    priority = 998,
     build = ":MasonUpdate",
     opts = {
       PATH = "append", -- preference already installed packages
       pip = {
         upgrade_pip = true,
+      },
+      registries = {
+        "github:nvim-java/mason-registry",
+        "github:mason-org/mason-registry"
       },
       ui = {
         border = "rounded",
@@ -370,12 +380,6 @@ local plugins = {
       end
       mr.refresh(ensure_installed)
     end,
-  },
-  {
-    "nvim-java/nvim-java",
-    lazy = false,
-    priority = 998,
-    enabled = utils.jdk_installed()
   },
   {
     "neovim/nvim-lspconfig", -- provides base LSP configs
@@ -503,7 +507,16 @@ if utils.go_installed() then
 end
 
 if utils.jdk_installed() then
-  vim.lsp.enable("jdtls")
+  require("java").setup({
+    jdk = {
+      auto_install = false,
+    },
+  })
+  require("lspconfig").jdtls.setup({ on_attach = on_lsp_attach })
+  --vim.lsp.config("jdtls", {
+  --  on_attach = on_lsp_attach
+  --})
+  --vim.lsp.enable("jdtls")
 end
 
 vim.lsp.config("lua_ls", {
@@ -582,3 +595,10 @@ vim.keymap.set("n", "<leader>tr", function()
 end, { desc = "Toggle relaive line numbers" })
 
 vim.keymap.set("n", "<leader>td", utils.toggle_diagnostics, { noremap = true, silent = true, desc = "Toggle Diagnostics" })
+
+if utils.jdk_installed() then
+  vim.keymap.set("n", "<leader>jb", ":JavaBuildBuildWorkspace<CR>", { noremap = true, silent = true, desc = "Runs a full workspace build" })
+  vim.keymap.set("n", "<leader>tc", ":JavaTestRunCurrentClass<CR>", { noremap = true, silent = true, desc = "Run the current Java test class" })
+  vim.keymap.set("n", "<leader>tm", ":JavaTestRunCurrentMethod<CR>", { noremap = true, silent = true, desc = "Run the current Java test method" })
+  vim.keymap.set("n", "<leader>tv", ":JavaTestViewLastReport<CR>", { noremap = true, silent = true, desc = "View the last Java test report" })
+end
