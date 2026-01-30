@@ -21,13 +21,13 @@ vim.opt.sidescrolloff = 5 -- min num of screen columns to keep to left and right
 vim.opt.signcolumn = "yes" -- always show the sign column
 vim.opt.wildmenu = true -- show completion popup menu when typing command (default: true)
 vim.opt.pumheight = 10 -- number of items to show in the popup menu
-vim.opt.termguicolors = true -- enabled 24-bit RGB colors
+vim.opt.termguicolors = true -- enable 24-bit RGB colors
 vim.opt.splitbelow = true -- force all horizontal splits below current window
 vim.opt.splitright = true -- force all vertical splits to the right of current window
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.tabstop = 2 -- number of spaces a tab counts for
 vim.opt.shiftwidth = 2 -- number of spaces for an indent via ">>", "<<", or smartindent
-vim.opt.updatetime = 1000 -- reduce cursor hold time to show disagnostics quicker (defualt: 4000ms)
+vim.opt.updatetime = 1000 -- reduce cursor hold time to show diagnostics quicker (default: 4000ms)
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' } -- show completions in a pop-up menu even if there is only 1 item and don't automatically select the first item
 
 -- Improve the look of diagnostics
@@ -36,10 +36,10 @@ vim.diagnostic.config({
   float = {
     focusable = false, -- don't allow window to be focused by mouse or keyboard
     border = "rounded",
-    source = "always",
+    source = true,
     header = "",
     prefix = "",
-    scope = "line" -- default: "line"
+    scope = "line", -- default: "line"
   },
   signs = true,
   underline = true,
@@ -47,8 +47,9 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
--- Add boarders to all LSP floating windows
+-- Add borders to all LSP floating windows
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+---@diagnostic disable-next-line: duplicate-set-field
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   opts = opts or {}
   opts.border = opts.border or "rounded"
@@ -59,7 +60,7 @@ end
 -- Auto-commands
 -- ----------------------------------------------------------------------------
 
--- pick up where you last left off in the file
+-- Pick up where you last left off in the file
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -70,7 +71,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- check spelling and wrap text for gitcommit and markdown
+-- Check spelling and wrap text for gitcommit and markdown
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "gitcommit", "markdown" },
   callback = function()
@@ -79,7 +80,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- follow pep 8 spacing guidelines for python files
+-- Follow PEP 8 spacing guidelines for Python files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "python" },
   callback = function()
@@ -125,10 +126,10 @@ function utils.toggle_diagnostics()
   utils.diagnostics_active = not utils.diagnostics_active
   if utils.diagnostics_active then
     vim.diagnostic.show()
-    require("utils").info("Enabled Diagnostics", { title = "LSP" })
+    utils.info("Enabled Diagnostics", { title = "LSP" })
   else
     vim.diagnostic.hide()
-    require("utils").warn("Disabled Diagnostics", { title = "LSP" })
+    utils.warn("Disabled Diagnostics", { title = "LSP" })
   end
 end
 
@@ -165,8 +166,8 @@ local plugins = {
     opts = function()
       return {
         style = "night",
-        on_highlights = function(h1, _)
-          h1.LineNr = { fg = "#d9d9d9" }
+        on_highlights = function(hl, _)
+          hl.LineNr = { fg = "#d9d9d9" }
         end,
       }
     end,
@@ -176,16 +177,17 @@ local plugins = {
       tokyonight.load()
     end,
   },
+  { "nvim-tree/nvim-web-devicons" },
   { "nvim-lua/plenary.nvim" },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   {
     "nvim-telescope/telescope.nvim",
-    event = "BufReadPre",
+    event = "LspAttach",
     keys = {
-      { "<leader>ff", "<CMD>lua require('telescope.builtin').find_files()<CR>", noremap = true, desc = "Telescope find files"  },
+      { "<leader>ff", "<CMD>lua require('telescope.builtin').find_files()<CR>", noremap = true, desc = "Telescope find files" },
       { "<leader>fg", "<CMD>lua require('telescope.builtin').live_grep()<CR>", noremap = true, desc = "Telescope live grep" },
       { "<leader>fb", "<CMD>lua require('telescope.builtin').buffers()<CR>", noremap = true, desc = "Telescope buffers" },
-      { "<leader>fh", "<CMD>lua require('telescope.builtin').help_tags()<CR>", noremap = true, desc = "Telescope help" }
+      { "<leader>fh", "<CMD>lua require('telescope.builtin').help_tags()<CR>", noremap = true, desc = "Telescope help" },
     },
     opts = function()
       local actions = require("telescope.actions")
@@ -225,14 +227,14 @@ local plugins = {
         close_icon = 'X',
         left_trunc_marker = '...',
         right_trunc_marker = '...',
-        disgnostics = "nvim_lsp",
-        diagnostices_indicator = nil,
+        diagnostics = "nvim_lsp",
+        diagnostics_indicator = nil,
         color_icons = false,
-        show_buffer_icons = false, --disable filetype icons for buffers
+        show_buffer_icons = false, -- disable filetype icons for buffers
         show_buffer_close_icons = true,
-        show_close_icon = true
-      }
-    }
+        show_close_icon = true,
+      },
+    },
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -251,14 +253,14 @@ local plugins = {
             sections = { "error", "warn" },
             update_in_insert = true,
             always_visible = true,
-          }
+          },
         },
         lualine_x = {
           "filesize",
           "encoding",
-          "filetype"
-        }
-      }
+          "filetype",
+        },
+      },
     },
   },
   {
@@ -268,9 +270,9 @@ local plugins = {
     opts = {
       highlight = {
         enable = true,
-        disable = function(lang, buf)
+        disable = function(_, buf)
           local max_filesize = 500 * 1024 -- 500 KB
-          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+          local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
           if ok and stats and stats.size > max_filesize then
             return true
           end
@@ -311,7 +313,7 @@ local plugins = {
         "vim",
         "vimdoc",
         "xml",
-        "yaml"
+        "yaml",
       },
       sync_install = true,
       ignore_install = {}, -- List of parsers to ignore installation
@@ -319,30 +321,33 @@ local plugins = {
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
       vim.opt.foldmethod = "expr" -- uses a custom expression (specified in foldexpr) to define folds
-      vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- use Treesitter's syntax-aware folding
+      vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- use Treesitter's syntax-aware folding
       vim.opt.foldenable = false -- start with folds open
       vim.opt.foldlevel = 99 -- prevents folds from being closed by default
     end,
   },
   {
     "nvim-java/nvim-java",
-    lazy = false,
-    priority = 999,
-    enabled = utils.jdk_installed()
+    ft = "java",
+    enabled = utils.jdk_installed(),
+    config = function()
+      require("java").setup()
+      vim.lsp.enable("jdtls")
+    end,
   },
   {
     "williamboman/mason.nvim",
     lazy = false,
-    priority = 998,
+    priority = 999,
     build = ":MasonUpdate",
     opts = {
-      PATH = "append", -- preference already installed packages
+      PATH = "append", -- prefer already installed packages
       pip = {
         upgrade_pip = true,
       },
       registries = {
         "github:nvim-java/mason-registry",
-        "github:mason-org/mason-registry"
+        "github:mason-org/mason-registry",
       },
       ui = {
         border = "rounded",
@@ -384,15 +389,15 @@ local plugins = {
   {
     "neovim/nvim-lspconfig", -- provides base LSP configs
     lazy = false,
-    prority = 997
-  }
+    priority = 998,
+  },
 }
 
 -- ----------------------------------------------------------------------------
 -- Lazy Plugin Manager
 -- ----------------------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -430,116 +435,102 @@ require("lazy").setup(plugins, {
 -- ----------------------------------------------------------------------------
 -- LSPs
 -- ----------------------------------------------------------------------------
-local function on_lsp_attach(client, bufnr)
-  local keymapopts = { buffer = bufnr, noremap = true, silent = true }
-  if client.supports_method("textDocument/completion") then
-    vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-  end
-  if client.supports_method("textDocument/declaration") then
-    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, keymapopts)
-  end
-  if client.supports_method("textDocument/definition") then
+
+-- Add helpful keymaps when an LSP attaches
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if not client then return end
+    local bufnr = args.buf
+    local keymapopts = { buffer = bufnr, noremap = true, silent = true }
+    if client:supports_method("textDocument/completion", bufnr) then
+      vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+    end
+    if client:supports_method("textDocument/declaration", bufnr) then
+      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, keymapopts)
+    end
     vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>", keymapopts)
-  end
-  if client.supports_method("textDocument/implementation") then
-    vim.keymap.set("n", "gi", ":Telescope lsp_implementations<CR>", keymapopts)
-  end
-  if client.supports_method("textDocument/references") then
-    vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>", keymapopts)
-  end
-  if client.supports_method("textDocument/hover") then
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, keymapopts)
-  end
-  if client.supports_method("textDocument/signatureHelp") then
-    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, keymapopts)
-  end
-  if client.supports_method("textDocument/rename") then
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, keymapopts)
-  end
-  if client.supports_method("textDocument/codeAction") then
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, keymapopts)
-  end
-  -- show diagnostics in hover window when cursor is stationary
-  vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function()
-      local opts = {
-        focusable = false,
-        border = "rounded",
-        source = "always",
-        header = "",
-        prefix = "",
-        scope = "cursor",
-        close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
-      }
-      vim.diagnostic.open_float(nil, opts)
-    end,
-  })
-  -- diagnostic shortcuts
-  vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, keymapopts)
-  vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, keymapopts)
-  -- workspace folder keymappings
-  vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, keymapopts)
-  vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, keymapopts)
-  vim.keymap.set("n", "<leader>wl", function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, keymapopts)
-end
+    if client:supports_method("textDocument/implementation", bufnr) then
+      vim.keymap.set("n", "gi", ":Telescope lsp_implementations<CR>", keymapopts)
+    end
+    if client:supports_method("textDocument/references", bufnr) then
+      vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>", keymapopts)
+    end
+    if client:supports_method("textDocument/hover", bufnr) then
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, keymapopts)
+    end
+    if client:supports_method("textDocument/signatureHelp", bufnr) then
+      vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, keymapopts)
+    end
+    if client:supports_method("textDocument/rename", bufnr) then
+      vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, keymapopts)
+    end
+    if client:supports_method("textDocument/codeAction", bufnr) then
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, keymapopts)
+    end
+    -- diagnostic shortcuts
+    vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, keymapopts)
+    vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, keymapopts)
+    -- workspace folder keymappings
+    vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, keymapopts)
+    vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, keymapopts)
+    vim.keymap.set("n", "<leader>wl", function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, keymapopts)
+  end,
+})
+
+-- Show diagnostics in hover window when cursor is stationary
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focusable = false,
+      border = "rounded",
+      source = true,
+      header = "",
+      prefix = "",
+      scope = "cursor",
+      close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
+    })
+  end,
+})
 
 -- Turn LSP logging off
 vim.lsp.set_log_level("off") -- change to "debug" to diagnose LSP issues
 
-vim.lsp.config("bashls", {
-  on_attach = on_lsp_attach
-})
+-- Configure and enable LSPs
 vim.lsp.enable("bashls")
 
 vim.lsp.config("clangd", {
   cmd = { "clangd", "--background-index", "--clang-tidy" },
-  on_attach = on_lsp_attach
 })
 vim.lsp.enable("clangd")
 
 if utils.go_installed() then
-  vim.lsp.config("gopls", {
-    on_attach = on_lsp_attach
-  })
   vim.lsp.enable("gopls")
 end
 
-if utils.jdk_installed() then
-  require("java").setup({
-    jdk = {
-      auto_install = false,
-    },
-  })
-  require("lspconfig").jdtls.setup({ on_attach = on_lsp_attach })
-  --vim.lsp.config("jdtls", {
-  --  on_attach = on_lsp_attach
-  --})
-  --vim.lsp.enable("jdtls")
-end
-
 vim.lsp.config("lua_ls", {
-  on_attach = on_lsp_attach,
   settings = {
     Lua = {
-      diagnostics = {
-        globals = { "vim" }
-      }
-    }
+      runtime = { version = "LuaJIT" },
+      workspace = {
+        library = {
+          vim.env.VIMRUNTIME .. "/lua",
+          "${3rd}/luv/library",
+        },
+      },
+      diagnostics = { globals = { "vim" } },
+    },
   },
 })
 vim.lsp.enable("lua_ls")
 
-vim.lsp.config("pyright", {
-  on_attach = on_lsp_attach
-})
 vim.lsp.enable("pyright")
 
-vim.lsp.config("ruff", {
-  on_attach = on_lsp_attach
-})
 vim.lsp.enable("ruff")
+
+-- jdtls is configured and enabled by nvim-java
 
 -- ----------------------------------------------------------------------------
 -- Keymaps
@@ -557,7 +548,7 @@ vim.lsp.enable("ruff")
 --   noremap = non-recursive mapping
 --   silent = execute command silently
 
--- Better window navitation
+-- Better window navigation
 vim.keymap.set("n", "<C-c>", "<C-w>c", { noremap = true, silent = true, desc = "Close window" })
 vim.keymap.set("n", "<C-h>", "<C-w>h", { noremap = true, silent = true, desc = "Move left one window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { noremap = true, silent = true, desc = "Move down one window" })
@@ -565,34 +556,34 @@ vim.keymap.set("n", "<C-k>", "<C-w>k", { noremap = true, silent = true, desc = "
 vim.keymap.set("n", "<C-l>", "<C-w>l", { noremap = true, silent = true, desc = "Move right one window" })
 
 -- Resize window with arrows
-vim.keymap.set("n", "<S-Up>", ":resize +2<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<S-Down>", ":resize -2<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<S-Left>", ":vertical resize -2<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<S-Right>", ":vertical resize +2<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<S-Up>", ":resize +2<CR>", { noremap = true, silent = true, desc = "Increase window height" })
+vim.keymap.set("n", "<S-Down>", ":resize -2<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
+vim.keymap.set("n", "<S-Left>", ":vertical resize -2<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
+vim.keymap.set("n", "<S-Right>", ":vertical resize +2<CR>", { noremap = true, silent = true, desc = "Increase window width" })
 
 -- Navigate buffers
 vim.keymap.set("n", "<S-h>", ":bprevious<CR>", { noremap = true, silent = true, desc = "Previous buffer" })
 vim.keymap.set("n", "<S-l>", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer" })
 
 -- Select all
-vim.keymap.set("n", "<C-a>", "ggVG<CR>", { noremap = true, silent = true, desc = "Select all" })
+vim.keymap.set("n", "<C-a>", "ggVG", { noremap = true, silent = true, desc = "Select all" })
 
 -- Clear search results
-vim.keymap.set("n", "<leader>c", ":noh<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>c", ":noh<CR>", { noremap = true, silent = true, desc = "Clear search highlights" })
 
 -- Paste without replacing clipboard
-vim.keymap.set("v", "p", '"_dP', { noremap = true, silent = true })
+vim.keymap.set("v", "p", '"_dP', { noremap = true, silent = true, desc = "Paste without replacing clipboard" })
 
 -- Toggles
 vim.keymap.set("n", "<leader>tw", function()
   utils.toggle("wrap")
-end, { desc = "Toggle line wrap" })
+end, { noremap = true, silent = true, desc = "Toggle line wrap" })
 
 vim.keymap.set("n", "<leader>tn", ":set invnumber<CR>", { noremap = true, silent = true, desc = "Toggle show numbers" })
 
 vim.keymap.set("n", "<leader>tr", function()
   utils.toggle("relativenumber")
-end, { desc = "Toggle relaive line numbers" })
+end, { noremap = true, silent = true, desc = "Toggle relative line numbers" })
 
 vim.keymap.set("n", "<leader>td", utils.toggle_diagnostics, { noremap = true, silent = true, desc = "Toggle Diagnostics" })
 
